@@ -202,3 +202,20 @@
 	{"Derelict","Survival C","BURSTON","BARREL"},
 	{"Derelict","Survival C","NOVA","SYSTEMS BLUEPRINT"},
 	{"Derelict","Survival C","FORMA","BLUEPRINT"},
+
+	{"Tower II","Survival C","ASH","CHASSIS BLUEPRINT"},
+	{"Tower IV","Survival A","ASH","CHASSIS BLUEPRINT"},
+	{"Tower III","Defense C","ASH","BLUEPRINT"},
+	{"Tower IV","Sabotage","ASH","HELMET BLUEPRINT"},
+	{"Tower III","Survival C","ASH","SYSTEM BLUEPRINT"},
+
+	{"Tower IV","Interception A","CARRIER","BLUEPRINT"},
+	{"Tower II","Exterminate","CARRIER","CEREBRUM"},
+	{"Tower III","Exterminate","CARRIER","CARAPACE"},
+	{"Tower IV","Sabotage","CARRIER","SYSTEMS"},
+
+	{"Tower I","Mobile Defense","VECTIS","BLUEPRINT"},
+	{"Tower IV","Interception B","VECTIS","BARREL"},
+	{"Tower III","Survival B","VECTIS","BARREL"},
+	{"Tower IV","Exterminate","VECTIS","RECEIVER"},
+	{"Tower III","Mobile Defense","VECTIS","STOCK"},
