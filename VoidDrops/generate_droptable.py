@@ -34,7 +34,7 @@ def rw_lua(fname,output):
 					
 					
 def parseArgs():
-	parser = argparse.ArgumentParser(description='Generate Lua format table from forum Void drop tables.\nYou will need three files for input: PC, PS and XB. Format being AshVoidPC.txt.')
+	parser = argparse.ArgumentParser(description='Generate Lua format table from forum Void drop tables. You will need three files for input: PC, PS and XB. Format being: AshVoidPC.txt')
 	parser.add_argument('prime_access', help='Prime Access Warframe name.')
 	args = parser.parse_args()
 	return args
