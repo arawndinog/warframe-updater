@@ -1,12 +1,10 @@
 import argparse
 import time
 
-prime_access = 'Ash'
-
 def rw_lua(fname,output):
 	output = open(output, 'w')
 	with open(fname, 'r') as origin:
-		output.write("--Last update: " + time.strftime("%d/%m/%Y") + "\n")
+		output.write("--Last update: " + time.strftime("%m/%d/%Y") + "\n")
 		for line in origin:
 			if not line.isspace():
 				if 'TOWER' in line:
