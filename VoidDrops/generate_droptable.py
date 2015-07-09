@@ -1,4 +1,4 @@
-fname = 'VoidPCAsh.txt'
+fname = 'AshVoidPC.txt'
 output = open('lua_output.txt', 'w')
 
 with open(fname, 'r') as origin:
