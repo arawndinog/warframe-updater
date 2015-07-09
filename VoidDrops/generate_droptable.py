@@ -17,7 +17,7 @@ with open(fname, 'r') as origin:
 			rotation = ""
 			continue
 		elif 'Rotation' in line:
-			rotation = line.rstrip(":\n").partition(" ")[2]
+			rotation = " " + line.rstrip(":\n").partition(" ")[2]
 			continue
 		elif not line.isspace():
 			reward = line.rstrip().split(" ")
@@ -27,4 +27,4 @@ with open(fname, 'r') as origin:
 				item += reward[i]
 				i += 1
 			part = reward[len(reward)-1]
-		output.write(tier + "," + mission + " " + rotation + "," + item + "," + part + "\n")
+		output.write('{"'+ tier + '","' + mission + rotation + '","' + item + '","' + part + '"},\n')
