@@ -1,4 +1,4 @@
---Last update: 07/09/2015
+--Last update: 07/10/2015
 	{"Tower I","Capture","ODONATA","BLUEPRINT"},
 	{"Tower I","Capture","PARIS","GRIP"},
 	{"Tower I","Capture","FORMA","BLUEPRINT"},
@@ -79,7 +79,7 @@
 	{"Tower III","Exterminate","SICARUS","BARREL"},
 	{"Tower III","Exterminate","??????",""},
 	{"Tower III","Exterminate","RHINO","BLUEPRINT"},
-	{"Tower III","Exterminate","NYX","SYSTEMS"},
+	{"Tower III","Exterminate","NYX","SYSTEMS BLUEPRINT"},
 	{"Tower IV","Exterminate","GLAIVE","BLUEPRINT"},
 	{"Tower IV","Exterminate","FORMA","BLUEPRINT"},
 	{"Tower IV","Exterminate","SICARUS","BARREL"},
