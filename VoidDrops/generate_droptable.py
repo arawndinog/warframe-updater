@@ -8,12 +8,12 @@ def rw_lua(fname,output):
 		for line in origin:
 			if not line.isspace():
 				if 'TOWER' in line:
-					location = line.rstrip().split(" ")
+					location = line.strip().split(" ")
 					tier = "Tower " + location[1]
 					mission = ' '.join(location[2:]).title()
 					rotation = ""
 				elif 'DERELICT' in line:
-					location = line.rstrip().split(" ")
+					location = line.strip().split(" ")
 					tier = "Derelict"
 					mission =  ' '.join(location[2:]).title()
 					rotation = ""
@@ -21,13 +21,13 @@ def rw_lua(fname,output):
 					rotation = " " + line.rstrip(":\n").partition(" ")[2]
 				else:
 					if 'PRIME' in line:
-						reward = line.rstrip().partition(" PRIME ")
-						item = reward[0]
-						part = reward[2]
+						reward = line.strip().partition(" PRIME ")
+						item = reward[0].strip()
+						part = reward[2].strip()
 					else:
-						reward = line.rstrip().split(" ")
-						item = reward[0]
-						part = ' '.join(reward[1:])
+						reward = line.strip().split(" ")
+						item = reward[0].strip()
+						part = ' '.join(reward[1:]).strip()
 					output.write('	{"'+ tier + '","' + mission + rotation + '","' + item + '","' + part + '"},\n')
 					
 					
@@ -44,3 +44,5 @@ def main():
 	rw_lua(wf_name.prime_access + 'VoidXB.txt', wf_name.prime_access + '_lua_output_XB.txt')
 
 main()
+
+#remove trailing spaces

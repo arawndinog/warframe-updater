@@ -1,4 +1,4 @@
---Last update: 07/10/2015
+--Last update: 07/11/2015
 	{"Tower I","Capture","ODONATA","BLUEPRINT"},
 	{"Tower I","Capture","PARIS","GRIP"},
 	{"Tower I","Capture","FORMA","BLUEPRINT"},
@@ -111,7 +111,7 @@
 	{"Tower II","Mobile Defense","BO","BLUEPRINT"},
 	{"Tower III","Mobile Defense","??????",""},
 	{"Tower III","Mobile Defense","EMBER","SYSTEMS BLUEPRINT"},
-	{"Tower III","Mobile Defense","SCINDO ","BLADE"},
+	{"Tower III","Mobile Defense","SCINDO","BLADE"},
 	{"Tower III","Mobile Defense","FORMA","BLUEPRINT"},
 	{"Tower III","Mobile Defense","BOLTOR","BLUEPRINT"},
 	{"Tower III","Mobile Defense","SOMA","BARREL"},
@@ -135,7 +135,7 @@
 	{"Tower II","Sabotage","HIKOU","POUCH"},
 	{"Tower III","Sabotage","LOKI","HELMET BLUEPRINT"},
 	{"Tower III","Sabotage","FORMA","BLUEPRINT"},
-	{"Tower III","Sabotage","SCINDO ","BLADE"},
+	{"Tower III","Sabotage","SCINDO","BLADE"},
 	{"Tower III","Sabotage","LOKI","SYSTEMS BLUEPRINT"},
 	{"Tower III","Sabotage","ANKYROS","BLADE"},
 	{"Tower III","Sabotage","SICARUS","BLUEPRINT"},
