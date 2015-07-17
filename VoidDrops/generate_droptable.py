@@ -1,10 +1,9 @@
 import argparse
 import time
 
-def rw_lua(fname,output):
-	output = open(output, 'w')
+def rw_lua(fname,platform,output):
 	with open(fname, 'r') as origin:
-		output.write("--Last update: " + time.strftime("%m/%d/%Y") + "\n")
+		output.write('["' + platform + '"] = {\n')
 		for line in origin:
 			if not line.isspace():
 				if 'TOWER' in line:
@@ -29,8 +28,8 @@ def rw_lua(fname,output):
 						item = reward[0].strip()
 						part = ' '.join(reward[1:]).strip()
 					output.write('	{"'+ tier + '","' + mission + rotation + '","' + item + '","' + part + '"},\n')
-					
-					
+		output.write("},\n")
+		
 def parseArgs():
 	parser = argparse.ArgumentParser(description='Generate Lua format table from forum Void drop tables. You will need three files for input: PC, PS and XB. Format being: AshVoidPC.txt')
 	parser.add_argument('prime_access', help='Prime Access Warframe name.')
@@ -39,10 +38,11 @@ def parseArgs():
 	
 def main():
 	wf_name = parseArgs()
-	rw_lua(wf_name.prime_access + 'VoidPC.txt', wf_name.prime_access + '_lua_output_PC.txt')
-	rw_lua(wf_name.prime_access + 'VoidPS.txt', wf_name.prime_access + '_lua_output_PS.txt')
-	rw_lua(wf_name.prime_access + 'VoidXB.txt', wf_name.prime_access + '_lua_output_XB.txt')
+	lua_dest = open(wf_name.prime_access + '_lua_output.txt', 'w')
+	lua_dest.write("--Last update: " + time.strftime("%m/%d/%Y") + "\n\nlocal VoidData = {\n")
+	rw_lua(wf_name.prime_access + 'VoidPC.txt', "PC",lua_dest)
+	rw_lua(wf_name.prime_access + 'VoidPS4.txt', "PS4",lua_dest)
+	rw_lua(wf_name.prime_access + 'VoidXB1.txt', "XB1",lua_dest)
+	lua_dest.write("}")
 
 main()
-
-#remove trailing spaces
