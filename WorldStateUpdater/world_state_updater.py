@@ -1,6 +1,7 @@
 import urllib2
 import json
 import threading
+import re
 
 runtime_minute = 0
 progress_record = []
@@ -13,25 +14,28 @@ def sec_to_dhms (seconds):
 
 def track_synthesis(data):
 	if 'EnemyType' in data['LibraryInfo']['CurrentTarget']:
-		global progress_record
 		current_time = data['Time']
 		activation = data['LibraryInfo']['CurrentTarget']['StartTime']['sec']
 		duration = current_time - activation
 		duration_d, duration_h, duration_m, duration_s = sec_to_dhms(duration)
-		target = data['LibraryInfo']['CurrentTarget']['EnemyType']
+		p = re.compile('[^/]+$')
+		target = p.findall(data['LibraryInfo']['CurrentTarget']['EnemyType'])
+		target = target[0]
 		progress = data['LibraryInfo']['CurrentTarget']['ProgressPercent']
 		avg_speed = progress/duration
 		time_left = (100-progress)/avg_speed
 		time_left_d, time_left_h, time_left_m, time_left_s = sec_to_dhms(time_left)
-		print target
-		print "Progress: " + str(progress) + "%"
-		print "Duration: %d days, %d hour(s), %d minute(s) and %d second(s)." % (duration_d, duration_h, duration_m, duration_s)
-		print "Average speed: " +  str(avg_speed*60) + "% per minute."
-		print "Time remaining: ~ %d day(s), %d hour(s), %d minute(s) and %d second(s)." % (time_left_d, time_left_h, time_left_m, time_left_s)
-		if (len(progress_record) != 0) and (current_time != progress_record[0]):
-			current_speed = (progress - progress_record[1])/(current_time - progress_record[0])
-			print "Current speed: " + str(current_speed*60) + "% per minute."
-		progress_record = [current_time, progress]
+		print "Target: " + target
+		print "Progress (percent): " + str(progress)
+		print "Duration (day): %d" % duration_d
+		print "Duration (hours): %d" % duration_h
+		print "Duration (minutes): %d" % duration_m
+		print "Duration (seconds): %d" % duration_s
+		print "Average speed (percent per minute): " +  str(avg_speed*60)
+		print "Time remaining (days): %d" % time_left_d
+		print "Time remaining (hours): %d" % time_left_h
+		print "Time remaining (minutes): %d" % time_left_m
+		print "Time remaining (seconds): %d" % time_left_s
 	else:
 		print "Cephalon Simaris is picking a new target."
 		pass
@@ -49,14 +53,13 @@ def main():
 	global runtime_minute
 	print "------------------New Entry------------------"
 	try:
-		parsed_data = parse_json('pc')
-		track_synthesis(parsed_data)
+		parsed_dataPC, parsed_dataPS4, parsed_dataXB1 = parse_json()
+		track_synthesis(parsed_dataPC)										#doing PC first
 		runtime_minute += 1
 	except Exception:
-		print "Connection error. No results saved."
+		print "Connection error. No results parsed."
 	print
-	print "This program refreshes every 1 minute."
-	print "This bot has been run for %d without interruption." % runtime_minute
+	print "This bot has been run for %d minutes without interruption." % runtime_minute
 	print "------------------End Entry------------------"
 	print
 	threading.Timer(60, main).start()
