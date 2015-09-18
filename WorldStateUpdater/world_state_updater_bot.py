@@ -2,6 +2,8 @@ import urllib2
 import json
 import threading
 import re
+import pywikibot
+from pywikibot import pagegenerators
 
 runtime_minute = 0
 
@@ -10,7 +12,7 @@ def sec_to_dhms (seconds):
 	hours, min = divmod(seconds/60,60)
 	days, hours = divmod(seconds/3600,24)
 	return (days, hours, min, sec)
-
+	
 def track_synthesis(data):
 	if 'EnemyType' in data['LibraryInfo']['CurrentTarget']:
 		current_time = data['Time']
@@ -23,6 +25,7 @@ def track_synthesis(data):
 		scans = data['LibraryInfo']['CurrentTarget']['PersonalScansRequired']
 		progress = data['LibraryInfo']['CurrentTarget']['ProgressPercent']
 		avg_speed = progress/duration
+		avg_speed_min = avg_speed*60
 		time_left = (100-progress)/avg_speed
 		time_left_d, time_left_h, time_left_m, time_left_s = sec_to_dhms(time_left)
 		print "Current time: " + str(current_time)
@@ -33,15 +36,16 @@ def track_synthesis(data):
 		print "Duration (hours): %d" % duration_h
 		print "Duration (minutes): %d" % duration_m
 		print "Duration (seconds): %d" % duration_s
-		print "Average speed (percent per minute): " +  str(avg_speed*60)
+		print "Average speed (percent per minute): " +  str(avg_speed_min)
 		print "Time remaining (days): %d" % time_left_d
 		print "Time remaining (hours): %d" % time_left_h
 		print "Time remaining (minutes): %d" % time_left_m
 		print "Time remaining (seconds): %d" % time_left_s
+		return (current_time,target,scans,progress,duration_d,duration_h,duration_m,duration_s,avg_speed_min,time_left_d,time_left_h,time_left_m,time_left_s)
 	else:
 		print "Cephalon Simaris is picking a new target."
 		pass
-		
+
 def parse_json():
 	responsePC = urllib2.urlopen('http://content.warframe.com/dynamic/worldState.php', timeout = 40)
 	responsePS4 = urllib2.urlopen('http://content.ps4.warframe.com/dynamic/worldState.php', timeout = 40)
@@ -50,9 +54,38 @@ def parse_json():
 	datumPS4 = json.load(responsePS4)
 	datumXB1 = json.load(responseXB1)
 	return (datumPC, datumPS4, datumXB1)
+	
+def modify_wiki(passed_list):
+	data_array = [["current_time",passed_list[0]],
+	["target", passed_list[1]],
+	["scans", passed_list[2]],
+	["progress", passed_list[3]],
+	["duration_d", passed_list[4]],
+	["duration_h", passed_list[5]],
+	["duration_m", passed_list[6]],
+	["duration_s", passed_list[7]],
+	["avg_speed_min", passed_list[8]],
+	["time_left_d", passed_list[9]],
+	["time_left_h", passed_list[10]],
+	["time_left_m", passed_list[11]],
+	["time_left_s", passed_list[12]]]
+	
+	site = pywikibot.Site()
+	page = pywikibot.Page(site, u"User:ChickenBar/WorldStateTest")
+	content = page.text
+	for i in range(len(data_array)):
+		p = re.compile(data_array[i][0]+',(.*?),')
+		content = p.sub(data_array[i][0]+','+str(data_array[i][1])+',',content)
+	print content
+	page.text=content
+	page.save(u"test")
 
 def main():
 	global runtime_minute
+	parsed_dataPC, parsed_dataPS4, parsed_dataXB1 = parse_json()
+	synthesis_data = track_synthesis(parsed_dataPC)
+	modify_wiki(synthesis_data)
+'''
 	print "------------------New Entry------------------"
 	try:
 		parsed_dataPC, parsed_dataPS4, parsed_dataXB1 = parse_json()
@@ -70,5 +103,6 @@ def main():
 	print "------------------End Entry------------------"
 	print
 	threading.Timer(60, main).start()
+'''
 
 main()
