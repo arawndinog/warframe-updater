@@ -75,13 +75,15 @@ def modify_wiki(passed_list):
 	page.save(u"Update Synthesis status")
 
 def main():
+	print "------------------New Entry------------------"
 	global runtime_minute
 	parsed_dataPC, parsed_dataPS4, parsed_dataXB1 = parse_json()
 	synthesis_data = track_synthesis(parsed_dataPC)
 	modify_wiki(synthesis_data)
+	print "------------------End Entry------------------"
+	print
 	threading.Timer(60, main).start()
 '''
-	print "------------------New Entry------------------"
 	try:
 		parsed_dataPC, parsed_dataPS4, parsed_dataXB1 = parse_json()
 		print "--------------PC---------------"
@@ -95,9 +97,9 @@ def main():
 		print "Connection error. No results parsed."
 	print
 	print "This bot has been run for %d minutes without interruption." % runtime_minute
-	print "------------------End Entry------------------"
-	print
-	threading.Timer(60, main).start()
 '''
 
 main()
+#throttle
+#exceptions
+#console support
