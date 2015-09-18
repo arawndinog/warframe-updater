@@ -32,15 +32,10 @@ def track_synthesis(data):
 		print "Target: " + target
 		print "Personal scans required: %d" % scans
 		print "Progress (percent): " + str(progress)
-		print "Duration (day): %d" % duration_d
-		print "Duration (hours): %d" % duration_h
-		print "Duration (minutes): %d" % duration_m
-		print "Duration (seconds): %d" % duration_s
+		print "Duration: %d days, %d hours, %d minutes, %d seconds." % (duration_d,duration_h,duration_m,duration_s)
 		print "Average speed (percent per minute): " +  str(avg_speed_min)
-		print "Time remaining (days): %d" % time_left_d
-		print "Time remaining (hours): %d" % time_left_h
-		print "Time remaining (minutes): %d" % time_left_m
-		print "Time remaining (seconds): %d" % time_left_s
+		print "Time remaining: %d days, %d hours, %d minutes, %d seconds." % (time_left_d,time_left_h,time_left_m,time_left_s)
+		print
 		return (current_time,target,scans,progress,duration_d,duration_h,duration_m,duration_s,avg_speed_min,time_left_d,time_left_h,time_left_m,time_left_s)
 	else:
 		print "Cephalon Simaris is picking a new target."
@@ -76,15 +71,15 @@ def modify_wiki(passed_list):
 	for i in range(len(data_array)):
 		p = re.compile(data_array[i][0]+',(.*?),')
 		content = p.sub(data_array[i][0]+','+str(data_array[i][1])+',',content)
-	print content
 	page.text=content
-	page.save(u"test")
+	page.save(u"Update Synthesis status")
 
 def main():
 	global runtime_minute
 	parsed_dataPC, parsed_dataPS4, parsed_dataXB1 = parse_json()
 	synthesis_data = track_synthesis(parsed_dataPC)
 	modify_wiki(synthesis_data)
+	threading.Timer(60, main).start()
 '''
 	print "------------------New Entry------------------"
 	try:
