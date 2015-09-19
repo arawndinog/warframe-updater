@@ -15,42 +15,58 @@ def sec_to_dhms (seconds):
 	
 def track_synthesis(data):
 	if 'EnemyType' in data['LibraryInfo']['CurrentTarget']:
+		data_list = []
 		current_time = data['Time']
-		activation = data['LibraryInfo']['CurrentTarget']['StartTime']['sec']
-		duration = current_time - activation
-		duration_d, duration_h, duration_m, duration_s = sec_to_dhms(duration)
+		data_list.append(current_time)
 		p = re.compile('[^/]+$')
 		target = p.findall(data['LibraryInfo']['CurrentTarget']['EnemyType'])
 		target = target[0]
+		data_list.append(target)
 		scans = data['LibraryInfo']['CurrentTarget']['PersonalScansRequired']
+		data_list.append(scans)
 		progress = data['LibraryInfo']['CurrentTarget']['ProgressPercent']
+		data_list.append(progress)
+		activation = data['LibraryInfo']['CurrentTarget']['StartTime']['sec']
+		duration = current_time - activation
+		duration_d, duration_h, duration_m, duration_s = sec_to_dhms(duration)
+		data_list.append(duration_d)
+		data_list.append(duration_h)
+		data_list.append(duration_m)
+		data_list.append(duration_s)
 		avg_speed = progress/duration
 		avg_speed_min = avg_speed*60
-		time_left = (100-progress)/avg_speed
-		time_left_d, time_left_h, time_left_m, time_left_s = sec_to_dhms(time_left)
+		data_list.append(avg_speed_min)
+		time_left = int((100-progress)/avg_speed)
+		remain_d, remain_h, remain_m, remain_s = sec_to_dhms(time_left)
+		data_list.append(remain_d)
+		data_list.append(remain_h)
+		data_list.append(remain_m)
+		data_list.append(remain_s)
 		print "Current time: " + str(current_time)
 		print "Target: " + target
 		print "Personal scans required: %d" % scans
 		print "Progress (percent): " + str(progress)
 		print "Duration: %d days, %d hours, %d minutes, %d seconds." % (duration_d,duration_h,duration_m,duration_s)
 		print "Average speed (percent per minute): " +  str(avg_speed_min)
-		print "Time remaining: %d days, %d hours, %d minutes, %d seconds." % (time_left_d,time_left_h,time_left_m,time_left_s)
+		print "Time remaining: %d days, %d hours, %d minutes, %d seconds." % (remain_d,remain_h,remain_m,remain_s)
 		print
-		return (current_time,target,scans,progress,duration_d,duration_h,duration_m,duration_s,avg_speed_min,time_left_d,time_left_h,time_left_m,time_left_s)
+		return data_list
 	else:
 		print "Cephalon Simaris is picking a new target."
 		pass
 
-def parse_json():
-	responsePC = urllib2.urlopen('http://content.warframe.com/dynamic/worldState.php', timeout = 40)
-	responsePS4 = urllib2.urlopen('http://content.ps4.warframe.com/dynamic/worldState.php', timeout = 40)
-	responseXB1 = urllib2.urlopen('http://content.xb1.warframe.com/dynamic/worldState.php', timeout = 40)
-	datumPC = json.load(responsePC)
-	datumPS4 = json.load(responsePS4)
-	datumXB1 = json.load(responseXB1)
-	return (datumPC, datumPS4, datumXB1)
+def parse_json(platform):
+	if platform == "PC":
+		response = urllib2.urlopen('http://content.warframe.com/dynamic/worldState.php', timeout = 40)
+	elif platform == "PS4":
+		response = urllib2.urlopen('http://content.ps4.warframe.com/dynamic/worldState.php', timeout = 40)
+	elif platform == "XB1":
+		response = urllib2.urlopen('http://content.xb1.warframe.com/dynamic/worldState.php', timeout = 40)
+	datum = json.load(response)
+	return datum
 	
-def modify_wiki(passed_list):
+def modify_wiki(passed_list, platform):
+
 	data_array = [["current_time",passed_list[0]],
 	["target", passed_list[1]],
 	["scans", passed_list[2]],
@@ -59,27 +75,42 @@ def modify_wiki(passed_list):
 	["duration_h", passed_list[5]],
 	["duration_m", passed_list[6]],
 	["duration_s", passed_list[7]],
-	["avg_speed_min", passed_list[8]],
-	["time_left_d", passed_list[9]],
-	["time_left_h", passed_list[10]],
-	["time_left_m", passed_list[11]],
-	["time_left_s", passed_list[12]]]
+	["speed",	 passed_list[8]],
+	["remain_d", passed_list[9]],
+	["remain_h", passed_list[10]],
+	["remain_m", passed_list[11]],
+	["remain_s", passed_list[12]]]
 	
 	site = pywikibot.Site()
-	page = pywikibot.Page(site, u"User:ChickenBar/WorldStateTest")
+	
+	if platform == "PC":
+		page = pywikibot.Page(site, u"Template:WorldState/Synthesis/PC")
+	elif platform == "PS4":
+		page = pywikibot.Page(site, u"Template:WorldState/Synthesis/PS4")
+	elif platform == "XB1":
+		page = pywikibot.Page(site, u"Template:WorldState/Synthesis/XB1")
 	content = page.text
 	for i in range(len(data_array)):
 		p = re.compile(data_array[i][0]+',(.*?),')
 		content = p.sub(data_array[i][0]+','+str(data_array[i][1])+',',content)
 	page.text=content
-	page.save(u"Update Synthesis status")
+	page.save(u"Update " + platform + " Synthesis status")
 
 def main():
 	print "------------------New Entry------------------"
 	global runtime_minute
-	parsed_dataPC, parsed_dataPS4, parsed_dataXB1 = parse_json()
-	synthesis_data = track_synthesis(parsed_dataPC)
-	modify_wiki(synthesis_data)
+	
+	parsed_data = parse_json("PC")
+	synthesis_data = track_synthesis(parsed_data)
+	modify_wiki(synthesis_data, "PC")
+	
+	parsed_data = parse_json("PS4")
+	synthesis_data = track_synthesis(parsed_data)
+	modify_wiki(synthesis_data, "PS4")
+	
+	parsed_data = parse_json("XB1")
+	synthesis_data = track_synthesis(parsed_data)
+	modify_wiki(synthesis_data, "XB1")
 	print "------------------End Entry------------------"
 	print
 	threading.Timer(60, main).start()
@@ -102,4 +133,4 @@ def main():
 main()
 #throttle
 #exceptions
-#console support
+#if simaris picking target
