@@ -96,21 +96,28 @@ def modify_wiki(passed_list, platform):
 	page.text=content
 	page.save(u"Update " + platform + " Synthesis status")
 
-def main():
+def main(*args):
+	local_args = pywikibot.handle_args(args)
+	genFactory = pagegenerators.GeneratorFactory()
+	for arg in local_args:
+		genFactory.handleArg(arg)
 	print "------------------New Entry------------------"
 	global runtime_minute
 	
 	parsed_data = parse_json("PC")
 	synthesis_data = track_synthesis(parsed_data)
 	modify_wiki(synthesis_data, "PC")
+	print
 	
 	parsed_data = parse_json("PS4")
 	synthesis_data = track_synthesis(parsed_data)
 	modify_wiki(synthesis_data, "PS4")
+	print
 	
 	parsed_data = parse_json("XB1")
 	synthesis_data = track_synthesis(parsed_data)
 	modify_wiki(synthesis_data, "XB1")
+	print
 	print "------------------End Entry------------------"
 	print
 	threading.Timer(60, main).start()
@@ -131,6 +138,5 @@ def main():
 '''
 
 main()
-#throttle
 #exceptions
 #if simaris picking target
