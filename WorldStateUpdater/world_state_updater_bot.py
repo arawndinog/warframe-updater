@@ -23,14 +23,18 @@ def track_synthesis(data):
 		data_list = []
 		current_time = data['Time']
 		data_list.append(current_time)
+		
 		p = re.compile('[^/]+$')
 		target = p.findall(data['LibraryInfo']['CurrentTarget']['EnemyType'])
 		target = target[0]
 		data_list.append(target)
+		
 		scans = data['LibraryInfo']['CurrentTarget']['PersonalScansRequired']
 		data_list.append(scans)
+		
 		progress = data['LibraryInfo']['CurrentTarget']['ProgressPercent']
 		data_list.append(progress)
+		
 		activation = data['LibraryInfo']['CurrentTarget']['StartTime']['sec']
 		duration = current_time - activation
 		duration_d, duration_h, duration_m, duration_s = sec_to_dhms(duration)
@@ -38,6 +42,7 @@ def track_synthesis(data):
 		data_list.append(duration_h)
 		data_list.append(duration_m)
 		data_list.append(duration_s)
+		
 		avg_speed = progress/duration
 		avg_speed_min = avg_speed*60
 		data_list.append(avg_speed_min)
@@ -47,6 +52,7 @@ def track_synthesis(data):
 		data_list.append(remain_h)
 		data_list.append(remain_m)
 		data_list.append(remain_s)
+		
 		print "Current time: " + str(current_time)
 		print "Target: " + target
 		print "Personal scans required: %d" % scans
@@ -126,6 +132,8 @@ def main(*args):
 		parsed_data = parse_json("XB1")
 		synthesis_data = track_synthesis(parsed_data)
 		modify_wiki(synthesis_data, "XB1")
+		print
+		
 		bot_success += 1
 	except Exception:
 		print "Connection error."
