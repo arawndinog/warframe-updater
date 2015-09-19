@@ -5,7 +5,12 @@ import re
 import pywikibot
 from pywikibot import pagegenerators
 
-runtime_minute = 0
+docuReplacements = {
+    '&params;': pagegenerators.parameterHelp,
+}
+
+bot_minute = 0
+bot_success = 0
 
 def sec_to_dhms (seconds):
 	min, sec = divmod(seconds,60)
@@ -53,7 +58,9 @@ def track_synthesis(data):
 		return data_list
 	else:
 		print "Cephalon Simaris is picking a new target."
-		pass
+		target = "Awaiting New Target"
+		data_list = [0,target,0,0,0,0,0,0,0,0,0,0,0]
+		return data_list
 
 def parse_json(platform):
 	if platform == "PC":
@@ -101,42 +108,33 @@ def main(*args):
 	genFactory = pagegenerators.GeneratorFactory()
 	for arg in local_args:
 		genFactory.handleArg(arg)
+	global bot_minute
+	global bot_success
 	print "------------------New Entry------------------"
-	global runtime_minute
-	
-	parsed_data = parse_json("PC")
-	synthesis_data = track_synthesis(parsed_data)
-	modify_wiki(synthesis_data, "PC")
+	try:
+		
+		parsed_data = parse_json("PC")
+		synthesis_data = track_synthesis(parsed_data)
+		modify_wiki(synthesis_data, "PC")
+		print
+		
+		parsed_data = parse_json("PS4")
+		synthesis_data = track_synthesis(parsed_data)
+		modify_wiki(synthesis_data, "PS4")
+		print
+		
+		parsed_data = parse_json("XB1")
+		synthesis_data = track_synthesis(parsed_data)
+		modify_wiki(synthesis_data, "XB1")
+		bot_success += 1
+	except Exception:
+		print "Connection error."
+	bot_minute += 1
 	print
-	
-	parsed_data = parse_json("PS4")
-	synthesis_data = track_synthesis(parsed_data)
-	modify_wiki(synthesis_data, "PS4")
-	print
-	
-	parsed_data = parse_json("XB1")
-	synthesis_data = track_synthesis(parsed_data)
-	modify_wiki(synthesis_data, "XB1")
-	print
+	print "Runtime: %d minutes." % bot_minute
+	print "Success: %d saves." % bot_success
 	print "------------------End Entry------------------"
 	print
 	threading.Timer(60, main).start()
-'''
-	try:
-		parsed_dataPC, parsed_dataPS4, parsed_dataXB1 = parse_json()
-		print "--------------PC---------------"
-		track_synthesis(parsed_dataPC)
-		print "--------------PS4--------------"
-		track_synthesis(parsed_dataPS4)
-		print "--------------XB1--------------"
-		track_synthesis(parsed_dataXB1)
-		runtime_minute += 1
-	except Exception:
-		print "Connection error. No results parsed."
-	print
-	print "This bot has been run for %d minutes without interruption." % runtime_minute
-'''
 
 main()
-#exceptions
-#if simaris picking target
