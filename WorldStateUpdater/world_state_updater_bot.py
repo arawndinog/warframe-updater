@@ -3,11 +3,7 @@ import json
 import threading
 import re
 import pywikibot
-from pywikibot import pagegenerators
-
-docuReplacements = {
-    '&params;': pagegenerators.parameterHelp,
-}
+from pywikibot import config
 
 bot_minute = 0
 bot_success = 0
@@ -109,11 +105,8 @@ def modify_wiki(passed_list, platform):
 	page.text=content
 	page.save(u"Update " + platform + " Synthesis status")
 
-def main(*args):
-	local_args = pywikibot.handle_args(args)
-	genFactory = pagegenerators.GeneratorFactory()
-	for arg in local_args:
-		genFactory.handleArg(arg)
+def main():
+	config.put_throttle = 00
 	global bot_minute
 	global bot_success
 	print "------------------New Entry------------------"
