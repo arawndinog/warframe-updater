@@ -1,8 +1,18 @@
 var request = require("request");
+var cheerio = require("cheerio");
 
-request("https://forums.warframe.com/forum/3-pc-update-build-notes/", function(error,response,body) {
+var pcBL = "https://forums.warframe.com/forum/3-pc-update-build-notes/";
+var xbBL = "https://forums.warframe.com/forum/253-xb1-update-build-notes/";
+var psBL = "https://forums.warframe.com/forum/152-ps4-update-build-notes/";
+
+function getPrimeLink(html) {
+    $ = cheerio.load(html);
+    return $("a[href*='prime-gear-drop-locations']").first().attr('href');
+};
+
+request(pcBL, function(error,response,body) {
     if (!error) {
-        console.log(body);
+        console.log(getPrimeLink(body));
     } else {
         console.log(error);
     }
