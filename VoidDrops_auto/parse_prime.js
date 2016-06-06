@@ -12,7 +12,11 @@ function getPrimeLink(html) {
 
 request(pcBL, function(error,response,body) {
     if (!error) {
-        console.log(getPrimeLink(body));
+        var primeLink = getPrimeLink(body);
+        console.log(primeLink);
+        request(primeLink, function(error,response,body){
+            console.log(body);
+        })
     } else {
         console.log(error);
     }
