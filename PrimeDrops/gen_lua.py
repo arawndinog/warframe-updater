@@ -23,12 +23,14 @@ def write_lua(source_path):
                     location = line.strip().split(" ")
                     tier = "Tower " + location[1]
                     mission = ' '.join(location[2:]).title()
+                    rotation = ""
                 elif 'DERELICT' in line:
                     location = line.strip().split(" ")
                     tier = "Derelict"
                     mission =  ' '.join(location[2:]).title()
+                    rotation = ""
                 elif 'Rotation' in line:
-                    mission = " " + line.rstrip(":\n").partition(" ")[2]
+                    rotation = " " + line.rstrip(":\n").partition(" ")[2]
                 else:
                     if 'PRIME' in line:
                         reward = line.strip().partition(" PRIME ")
@@ -38,7 +40,7 @@ def write_lua(source_path):
                         reward = line.strip().split(" ")
                         item = reward[0].strip()
                         part = ' '.join(reward[1:]).strip()
-                    drop_str += '  {"'+ tier + '","' + mission + '","' + item + '","' + part + '"},\n'
+                    drop_str += '  {"'+ tier + '","' + mission + rotation + '","' + item + '","' + part + '"},\n'
         drop_str += "},\n"
     return drop_str
     
