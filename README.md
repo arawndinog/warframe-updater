@@ -1,2 +1,2 @@
-# Wikia
-Wiki related bits
+# warframe-wiki
+Warframe and wiki related bits
