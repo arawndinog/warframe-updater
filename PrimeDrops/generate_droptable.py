@@ -3,13 +3,13 @@ import time
 
 def main():
     #wf_name = parseArgs()
-    # source_dir = "Drop Lists/"
+    source_dir = "Drop Lists/"
     # output_dir = "Lua Outputs/"
     lua_dest = open('lua_output.txt', 'w')
     lua_dest.write("--Last update: " + time.strftime("%m/%d/%Y") + "\n\nlocal VoidData = {\n")
-    rw_lua('AshVoidPC.txt', "PC", lua_dest)
-    rw_lua('AshVoidPS4.txt', "PS4", lua_dest)
-    rw_lua('AshVoidXB1.txt', "XB1", lua_dest)
+    rw_lua(source_dir + 'AshVoidPC.txt', "PC", lua_dest)
+    rw_lua(source_dir + 'AshVoidPS4.txt', "PS4", lua_dest)
+    rw_lua(source_dir + 'AshVoidXB1.txt', "XB1", lua_dest)
     # rw_lua('PC_output.txt', "PC", lua_dest)
     # rw_lua('PS4_output.txt', "PS4", lua_dest)
     # rw_lua('XB1_output.txt', "XB1", lua_dest)
