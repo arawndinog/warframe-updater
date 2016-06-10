@@ -21,7 +21,7 @@ def rw_lua(fname,platform,output):
     with open(fname, 'r') as origin:
         output.write('["' + platform + '"] = {\n')
         for line in origin:
-            if line: #not line.isspace():   # TODO: Fix this
+            if not line.isspace():
                 if 'TOWER' in line:
                     location = line.strip().split(" ")
                     tier = "Tower " + location[1]
