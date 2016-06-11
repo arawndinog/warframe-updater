@@ -4,7 +4,12 @@ from datetime import datetime
 
 def main():
     now_date = datetime.now()
-    pc_drop_list, ps_drop_list, xb_drop_list = gen_drop_list()
+    pc_url = "https://forums.warframe.com/forum/3-pc-update-build-notes/"
+    ps_url = "https://forums.warframe.com/forum/152-ps4-update-build-notes/"
+    xb_url = "https://forums.warframe.com/forum/253-xb1-update-build-notes/"
+    pc_drop_list = gen_drop_list(pc_url)
+    ps_drop_list = gen_drop_list(ps_url)
+    xb_drop_list = gen_drop_list(xb_url)
     result_str = "--Last update: " + str(now_date.month) + "/" + str(now_date.day) + "/" + str(now_date.year) + "\n\nlocal VoidData = {\n"
     result_str += gen_drop_str(pc_drop_list, 'PC')
     result_str += gen_drop_str(ps_drop_list, 'PS4')
@@ -44,45 +49,20 @@ def gen_drop_str(drop_list,platform):
     return drop_str
     
 
-def gen_drop_list():
-    pc_url = "https://forums.warframe.com/forum/3-pc-update-build-notes/"
-    ps_url = "https://forums.warframe.com/forum/152-ps4-update-build-notes/"
-    xb_url = "https://forums.warframe.com/forum/253-xb1-update-build-notes/"
-
-    pc_source = get_source(pc_url)
-    ps_source = get_source(ps_url)
-    xb_source = get_source(xb_url)
+def gen_drop_list(url):
+    source = get_source(url)
 
     link_finder = PrimeLinkFinder()
-    link_finder.feed(pc_source)
-    pc_drop_link = link_finder.get_links()[0]
-    link_finder.feed(ps_source)
-    ps_drop_link = link_finder.get_links()[0]
-    link_finder.feed(xb_source)
-    xb_drop_link = link_finder.get_links()[0]
+    link_finder.feed(source)
+    drop_link = link_finder.get_links()[0]
 
-    pc_drop_source = get_source(pc_drop_link)
-    ps_drop_source = get_source(ps_drop_link)
-    xb_drop_source = get_source(xb_drop_link)
+    drop_source = get_source(drop_link)
 
     drop_parser = DropListParser()
-    drop_parser.feed(pc_drop_source)
-    pc_drop_list = drop_parser.filter_content()
-    drop_parser.feed(ps_drop_source)
-    ps_drop_list = drop_parser.filter_content()
-    drop_parser.feed(xb_drop_source)
-    xb_drop_list = drop_parser.filter_content()
+    drop_parser.feed(drop_source)
+    drop_list = drop_parser.filter_content()
 
-    parsed_out = open('parsed_drop_list.txt','w')
-    parsed_out.write('----------PC DROPS----------\n')
-    parsed_out.write('\n'.join(pc_drop_list))
-    parsed_out.write('\n----------PS4 DROPS----------\n')
-    parsed_out.write('\n'.join(ps_drop_list))
-    parsed_out.write('\n----------XB1 DROPS----------\n')
-    parsed_out.write('\n'.join(xb_drop_list))
-    parsed_out.close()
-
-    return pc_drop_list, ps_drop_list, xb_drop_list
+    return drop_list
 
 def get_source(url):
     req = request.Request(url)
