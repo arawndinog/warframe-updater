@@ -2,13 +2,12 @@ from datetime import datetime
 
 def main():
     drop_files = ['PC_output.txt','PS4_output.txt','XB1_output.txt']
-    lua_output_path = 'lua_output.txt'
     now_date = datetime.now()
     result_str = "--Last update: " + str(now_date.month) + "/" + str(now_date.day) + "/" + str(now_date.year) + "\n\nlocal VoidData = {\n"
     for i in range(len(drop_files)):
         result_str += write_lua(drop_files[i])
     result_str += "}"
-    lua_output = open('lua_output.txt', 'w')
+    lua_output = open('lua_output.lua', 'w')
     lua_output.write(result_str)
     lua_output.close()
     return
