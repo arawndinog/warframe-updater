@@ -1,15 +1,20 @@
 from html.parser import HTMLParser
 from urllib import request
 from datetime import datetime
+from time import time
 
 def main():
+    start_time = time()
     now_date = datetime.now()
     pc_url = "https://forums.warframe.com/forum/3-pc-update-build-notes/"
     ps_url = "https://forums.warframe.com/forum/152-ps4-update-build-notes/"
     xb_url = "https://forums.warframe.com/forum/253-xb1-update-build-notes/"
     pc_drop_list = gen_drop_list(pc_url)
+    print("Parsed PC drop list.")
     ps_drop_list = gen_drop_list(ps_url)
+    print("Parsed PS4 drop list.")
     xb_drop_list = gen_drop_list(xb_url)
+    print("Parsed XB1 drop list.")
     result_str = "--Last update: " + str(now_date.month) + "/" + str(now_date.day) + "/" + str(now_date.year) + "\n\nlocal VoidData = {\n"
     result_str += gen_drop_str(pc_drop_list, 'PC')
     result_str += gen_drop_str(ps_drop_list, 'PS4')
@@ -18,6 +23,9 @@ def main():
     lua_output = open('lua_output.lua', 'w')
     lua_output.write(result_str)
     lua_output.close()
+    print("Lua table generated.")
+    elapsed_time = time() - start_time
+    print("Time elapsed: %.3f seconds." % elapsed_time)
     return
 
 def gen_drop_str(drop_list,platform):
@@ -114,7 +122,7 @@ class DropListParser(HTMLParser):
                 found_essence = True
             if parsed_list[i].isspace() or not parsed_list[i]:
                 del parsed_list[i]
-                i -= 1
+                continue
             i += 1
         essence_end = i
         parsed_list = parsed_list[essence_start:essence_end]
