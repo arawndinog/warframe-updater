@@ -116,20 +116,18 @@ class DropListParser(HTMLParser):
         found_essence = False
         i = 0
         while (found_essence == False) or (parsed_list[i] != 'article_ends'):
-            parsed_list[i] = parsed_list[i].strip()
-            if parsed_list[i] == 'drop_table_start':
-                essence_start = i+1
-                found_essence = True
             if parsed_list[i].isspace() or not parsed_list[i]:
                 del parsed_list[i]
                 continue
+            elif parsed_list[i] == 'drop_table_start':
+                essence_start = i+1
+                found_essence = True
+            else:
+                parsed_list[i] = parsed_list[i].strip()
             i += 1
         essence_end = i
         parsed_list = parsed_list[essence_start:essence_end]
         return parsed_list
 
-
-
 if __name__ == '__main__':
     main()
-
