@@ -99,7 +99,7 @@ class DropListParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
         if tag == 'article':
             for (attribute, value) in attrs:
-                if (attribute == 'class') and ('ipsBox ipsPad' in value):
+                if (attribute == 'class') and ('ipsBox' in value):  #still does not work when post not in header
                     self.parsed_content.append('drop_table_start')
 
     def handle_endtag(self,tag):
@@ -115,7 +115,7 @@ class DropListParser(HTMLParser):
         essence_end = 0
         found_essence = False
         i = 0
-        while (found_essence == False) or (parsed_list[i] != 'article_ends'):
+        while not found_essence or (parsed_list[i] != 'article_ends'):
             if parsed_list[i].isspace() or not parsed_list[i]:
                 del parsed_list[i]
                 continue
